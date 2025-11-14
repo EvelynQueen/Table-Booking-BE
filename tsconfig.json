@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    /* === File Structure === */
+    "rootDir": "./src", // Where your .ts source files are
+    "outDir": "./dist", // Where compiled .js files will go
+
+    /* === Environment Settings === */
+    "target": "ES2020", // Modern JS output
+    "module": "CommonJS", // Express/Node expects CommonJS modules
+    "lib": ["ES2020"], // Use modern JS features
+    "types": ["node"], // Include Node.js type definitions
+
+    /* === Output Options === */
+    "sourceMap": true, // Enables .map files for debugging
+    "declaration": true, // Generate .d.ts type declaration files
+    "declarationMap": false,
+
+    /* === Strict Type-Checking === */
+    "strict": true, // Enable all strict checks
+    "noImplicitAny": true, // Prevent using `any` implicitly
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+
+    /* === Module Resolution === */
+    "esModuleInterop": true, // Allow default imports (import express from "express")
+    "moduleResolution": "node", // How TypeScript finds modules
+    "resolveJsonModule": true, // Allows importing .json files
+    "skipLibCheck": true, // Skip type checking of node_modules
+    "forceConsistentCasingInFileNames": true
+  },
+
+  "include": ["src"], // Only compile code in src/
+  "exclude": ["node_modules", "dist"]
+}
