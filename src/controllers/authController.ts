@@ -2,6 +2,7 @@ import { User } from "../models/userSchema";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { sendVerificationEmail } from "../utils/sendEmail";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 
 // Register user
 export const registerUser = async (req: Request, res: Response) => {
@@ -72,4 +73,36 @@ export const verifyMail = async (req: Request, res: Response) => {
   }
 };
 
-//
+// Login + grant tokens
+export const login = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  // Check if user is existed
+  const user = await User.findOne({ email }).select("+password");
+  if (!user)
+    return res.status(400).json({ message: "Invalid email or password" });
+
+  const match = await bcrypt.compare(password, user.password);
+  if (!match)
+    return res.status(400).json({ message: "Invalid email or password" });
+
+  if (!user.verified)
+    return res.status(400).json({ message: "Unverified user" });
+
+  // Issue tokens
+  const accessToken = generateAccessToken(user._id.toString(), user.role);
+  const refreshToken = generateRefreshToken(user._id.toString());
+
+  // Save rf to DB
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  return res.status(200).json({
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    accessToken,
+    refreshToken,
+  });
+};
