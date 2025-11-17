@@ -2,7 +2,8 @@ import { User } from "../models/userSchema";
 import { Request, Response } from "express";
 import { generateAccessToken } from "../utils/jwt";
 import jwt from "jsonwebtoken";
-// Refresh token
+// Verify refresh token to generate new access token
+// In controller because it interact with DB
 export const refreshAccessToken = async (req: Request, res: Response) => {
   const { refreshToken } = req.body;
 

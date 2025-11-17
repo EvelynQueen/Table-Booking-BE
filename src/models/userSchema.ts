@@ -41,7 +41,8 @@ const UserSchema = new Schema<IUser>(
     forgotPasswordToken: String,
     forgotPasswordExpires: Date,
     verifyCode: String,
-    verifyExpires: String,
+    verifyCreated: Date,
+    verifyExpires: Date,
     verified: {
       type: Boolean,
       default: false,

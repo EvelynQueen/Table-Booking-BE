@@ -12,7 +12,8 @@ export interface IUser {
   forgotPasswordToken?: string;
   forgotPasswordExpires?: Date;
   verifyCode?: string;
-  verifyExpires?: string;
+  verifyCreated?: Date;
+  verifyExpires?: Date;
   verified?: boolean;
   createdAt: Date;
   updatedAt: Date;
