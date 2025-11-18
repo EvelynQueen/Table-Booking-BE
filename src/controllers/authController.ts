@@ -1,7 +1,10 @@
 import { User } from "../models/userSchema";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { sendVerificationEmail } from "../utils/sendEmail";
+import {
+  sendForgotVerificationEmail,
+  sendVerificationEmail,
+} from "../utils/sendEmail";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 
 // Register user
@@ -151,3 +154,80 @@ export const login = async (req: Request, res: Response) => {
 };
 
 // Forgot password send mail
+export const forgotPassSendVerifyMail = async (req: Request, res: Response) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+    if (
+      user.forgotPasswordCreated &&
+      user.forgotPasswordCreated + 60_000 > new Date()
+    ) {
+      return res.status(429).json({
+        message: "OTP already sent. Please wait a minutes to resend!",
+      });
+    }
+
+    const forgotPasswordToken = Math.floor(
+      Math.random() * 900000 + 100000
+    ).toString();
+    const forgotPasswordCreated = new Date();
+    const forgotPasswordExpires = new Date(
+      forgotPasswordCreated.getTime() + 10 * 60 * 1000
+    );
+
+    user.forgotPasswordToken = forgotPasswordToken;
+    user.forgotPasswordCreated = forgotPasswordCreated;
+    user.forgotPasswordExpires = forgotPasswordExpires;
+    await user.save(); // IMPORTANT
+
+    await sendForgotVerificationEmail(email, forgotPasswordToken);
+
+    return res.status(200).json({
+      message:
+        "A password reset verification code has been sent to your email.",
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error!" });
+  }
+};
+
+// Verify forgot passwork otp
+export const verifyForgotPasswordEmail = async (
+  req: Request,
+  res: Response
+) => {
+  const { email, forgotPasswordToken, newPassword } = req.body;
+
+  const user = await User.findOne({ email }).select("+password");
+  if (!user) {
+    return res.status(404).json({ message: "User not found!" });
+  }
+
+  // Expired OTP
+  if (user.forgotPasswordExpires && user.forgotPasswordExpires < new Date()) {
+    return res.status(410).json({ message: "OTP has expired!" });
+  }
+
+  // Invalid OTP
+  if (user.forgotPasswordToken !== forgotPasswordToken) {
+    return res.status(400).json({ message: "Invalid verification code!" });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    user.password = hashedPassword;
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordCreated = undefined;
+    user.forgotPasswordExpires = undefined;
+
+    await user.save();
+
+    return res.status(200).json({ message: "Password updated successfully!" });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error!" });
+  }
+};

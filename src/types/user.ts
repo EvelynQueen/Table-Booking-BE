@@ -10,6 +10,7 @@ export interface IUser {
   accessToken?: string;
   refreshToken?: string;
   forgotPasswordToken?: string;
+  forgotPasswordCreated?: Date;
   forgotPasswordExpires?: Date;
   verifyCode?: string;
   verifyCreated?: Date;

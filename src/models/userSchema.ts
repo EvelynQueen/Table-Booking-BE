@@ -39,6 +39,7 @@ const UserSchema = new Schema<IUser>(
     accessToken: String,
     refreshToken: String,
     forgotPasswordToken: String,
+    forgotPasswordCreated: Date,
     forgotPasswordExpires: Date,
     verifyCode: String,
     verifyCreated: Date,

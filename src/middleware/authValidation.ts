@@ -12,8 +12,8 @@ export const registerValidation = [
     .withMessage("Name must be 2-50 characters"),
   body("email").isEmail().withMessage("Invalid email").normalizeEmail(),
   body("password")
-    .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters"),
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters"),
 ];
 
 export const validate = (
@@ -59,3 +59,14 @@ export const verifyAccessToken = (
     return res.status(401).json({ message: "Token expired or invalid" });
   }
 };
+
+// validateForgotPassword.ts
+export const verifyForgotPasswordValidation = [
+  body("email").isEmail().withMessage("Invalid email"),
+  body("forgotPasswordToken")
+    .notEmpty()
+    .withMessage("Verification code is required"),
+  body("newPassword")
+    .isLength({ min: 6 })
+    .withMessage("New password must be at least 8 characters"),
+];

@@ -1,8 +1,10 @@
 import express from "express";
 import {
+  forgotPassSendVerifyMail,
   login,
   registerUser,
   resendVerificationCode,
+  verifyForgotPasswordEmail,
   verifyMail,
 } from "../controllers/authController";
 import { registerValidation, validate } from "../middleware/authValidation";
@@ -10,7 +12,15 @@ import { registerValidation, validate } from "../middleware/authValidation";
 const authRouter = express.Router();
 
 authRouter.post("/auth/register", registerValidation, validate, registerUser);
-authRouter.post("/auth/verification", verifyMail);
-authRouter.post("/auth/reVerification", resendVerificationCode);
+authRouter.post("/auth/verify", verifyMail);
+authRouter.post("/auth/verify/resend", resendVerificationCode);
+
+authRouter.post("/auth/password/forgot/send-otp", forgotPassSendVerifyMail);
+authRouter.post(
+  "/auth/password/forgot/change-password",
+  verifyForgotPasswordEmail
+);
+
 authRouter.post("/auth/login", login);
+
 export default authRouter;
