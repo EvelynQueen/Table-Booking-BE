@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
+import { decodeToken } from "../utils/jwt";
 import { AuthRequest } from "../types/authRequest";
-import jwt from "jsonwebtoken";
 // Register validation
 export const registerValidation = [
   body("name")
@@ -29,9 +29,8 @@ export const validate = (
         message: err.msg,
       })),
     });
-    return;
   }
-  return next();
+  next();
 };
 
 // Verify Access Token (protect routes)
@@ -49,10 +48,7 @@ export const verifyAccessToken = (
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET as string
-    ) as { userId: string; role: string };
+    const decoded = decodeToken(token);
     req.user = decoded;
     return next();
   } catch (err) {
