@@ -9,13 +9,18 @@ import {
 } from "../controllers/authController";
 import {
   registerValidation,
-  validate,
   verifyForgotPasswordValidation,
 } from "../middleware/authValidation";
+import { validateRequest } from "../middleware/validateRequest";
 
 const authRouter = express.Router();
 
-authRouter.post("/auth/register", registerValidation, validate, registerUser);
+authRouter.post(
+  "/auth/register",
+  registerValidation,
+  validateRequest,
+  registerUser
+);
 authRouter.post("/auth/verify", verifyMail);
 authRouter.post("/auth/verify/resend", resendVerificationCode);
 

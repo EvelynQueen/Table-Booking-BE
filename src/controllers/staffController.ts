@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { User } from "../models/userSchema";
 import bcrypt from "bcrypt";
 import { sendStaffVerificationEmail } from "../utils/sendEmail";
 import { AuthRequest } from "../types/authRequest";
 
 // Create Staff (only OWNER allowed)
-export const createStaff = async (req: Request, res: Response) => {
+export const createStaff = async (req: AuthRequest, res: Response) => {
   const { name, email, password, role, phoneNumber } = req.body;
 
   try {
