@@ -61,7 +61,13 @@ export const deleteStaff = async (req: AuthRequest, res: Response) => {
 
     await staff.deleteOne();
 
-    return res.status(200).json({ message: "Staff deleted successfully!" });
+    return res.status(200).json({
+      message: "Staff deleted successfully!",
+      staff: {
+        email: staff.email,
+        role: staff.role,
+      },
+    });
   } catch (error) {
     return res.status(500).json({ message: "Server error!" });
   }

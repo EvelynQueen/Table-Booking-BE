@@ -1,16 +1,34 @@
 import express from "express";
 import { validateOwnerToken } from "../middleware/authValidation";
-import { floorValidation } from "../middleware/floorValidation";
+import {
+  createFloorValidation,
+  updateFloorValidation,
+} from "../middleware/floorValidation";
 import { validateRequest } from "../middleware/validateRequest";
-import { createFloor } from "../controllers/floorController";
+import {
+  createFloor,
+  deleteFloor,
+  updateFloor,
+} from "../controllers/floorController";
 
 const floorRouter = express.Router();
 
 floorRouter.post(
   "/floor/create",
   validateOwnerToken,
-  floorValidation,
+  createFloorValidation,
   validateRequest,
   createFloor
 );
+
+floorRouter.delete("/floor/delete/:id", validateOwnerToken, deleteFloor);
+
+floorRouter.put(
+  "/floor/update/:id",
+  validateOwnerToken,
+  updateFloorValidation,
+  validateRequest,
+  updateFloor
+);
+
 export default floorRouter;
