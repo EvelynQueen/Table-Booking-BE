@@ -8,21 +8,21 @@ const TableSchema = new Schema<ITable>(
       type: String,
       required: true,
       trim: true,
-      minlength: 2,
+      minlength: 1,
       maxlength: 10,
     },
-    floor: {
+    floorId: {
       type: Schema.Types.ObjectId,
       ref: "Floor",
       required: true,
     },
-    seat: { type: Number, required: true },
+    seat: { type: Number, required: true, min: 0 },
     status: {
       type: String,
       enum: Object.values(TableStatus),
       default: TableStatus.AVAILABLE,
     },
-    description: { type: String },
+    description: { type: String, minLength: 5, maxLength: 500 },
   },
   { timestamps: true }
 );

@@ -7,7 +7,8 @@ const reservationSchema = new Schema<IReservation>(
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     table: { type: Schema.Types.ObjectId, ref: "Table", required: true },
     date: { type: Date, required: true },
-    timeSlot: { type: String, required: true },
+    startTime: { type: Date, required: true },
+    endTime: { type: Date, required: true },
     guests: { type: Number, required: true },
     status: {
       type: String,

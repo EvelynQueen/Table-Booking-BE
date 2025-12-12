@@ -8,11 +8,13 @@ import { validateRequest } from "../middleware/validateRequest";
 import {
   createFloor,
   deleteFloor,
+  getAllFloor,
   updateFloor,
 } from "../controllers/floorController";
 
 const floorRouter = express.Router();
 
+floorRouter.get("/floor/list", getAllFloor);
 floorRouter.post(
   "/floor/create",
   validateOwnerToken,

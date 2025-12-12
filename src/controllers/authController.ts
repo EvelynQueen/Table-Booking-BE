@@ -137,7 +137,11 @@ export const login = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Email not verified" });
 
   // Issue tokens
-  const accessToken = generateAccessToken(user._id.toString(), user.role);
+  const accessToken = generateAccessToken(
+    user.email,
+    user._id.toString(),
+    user.role
+  );
   const refreshToken = generateRefreshToken(user._id.toString());
 
   // Save rf to DB

@@ -1,11 +1,19 @@
 import jwt from "jsonwebtoken";
 
 // Generate JWT Token
-export const generateAccessToken = (userId: string, role: string) => {
+export const generateAccessToken = (
+  email: string,
+  userId: string,
+  role: string
+) => {
   // Sign JWT => payload, secret, option
-  return jwt.sign({ userId, role }, process.env.ACCESS_TOKEN_SECRET as string, {
-    expiresIn: "15m",
-  });
+  return jwt.sign(
+    { email, userId, role },
+    process.env.ACCESS_TOKEN_SECRET as string,
+    {
+      expiresIn: "15m",
+    }
+  );
 };
 
 export const generateRefreshToken = (userId: string) => {
@@ -16,6 +24,7 @@ export const generateRefreshToken = (userId: string) => {
 
 // Decode ACCESS Token
 export interface DecodedToken {
+  email: string;
   userId: string;
   role: string;
   [key: string]: any;

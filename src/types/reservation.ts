@@ -4,7 +4,8 @@ export interface IReservation {
   user: mongoose.Types.ObjectId;
   table: mongoose.Types.ObjectId;
   date: Date;
-  timeSlot: string;
+  startTime: Date;
+  endTime: Date;
   guests: number;
   status: string;
   note?: string;

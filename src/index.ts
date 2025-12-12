@@ -4,6 +4,8 @@ import { connectDB } from "./models/dbConnect";
 import authRouter from "./routes/authRouter";
 import userRouter from "./routes/userRouter";
 import floorRouter from "./routes/floorRouter";
+import tableRouter from "./routes/tableRouter";
+import router from "./utils/upload";
 const app = express();
 const PORT = 3000;
 
@@ -34,6 +36,8 @@ connectDB();
 app.use("/api", authRouter);
 app.use("/api", floorRouter);
 app.use("/api", userRouter);
+app.use("/api", tableRouter);
+app.use("/api", router);
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
